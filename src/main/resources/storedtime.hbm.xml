@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd//hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.deniss.neotech.db.StoredTime" table="storedTime" catalog="testbase">
+        <id name="id" type="java.lang.Integer">
+            <column name="THE_ID" />
+            <generator class="identity" />
+        </id>
+        <property name="TheTime" type="java.sql.Timestamp">
+            <column name="THE_TIME"  not-null="true"  />
+        </property>
+
+    </class>
+</hibernate-mapping>
