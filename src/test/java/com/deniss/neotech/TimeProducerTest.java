@@ -1,13 +1,10 @@
 package com.deniss.neotech;
 
 
-import com.deniss.neotech.db.StoredTime;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Timer;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 

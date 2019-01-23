@@ -3,6 +3,7 @@ package com.deniss.neotech;
 import com.deniss.neotech.db.HibernateUtil;
 import com.deniss.neotech.db.StoredTime;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -88,7 +89,7 @@ class TimeSaver implements Callable<Boolean> {
             }
             session.getTransaction().commit();
 
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             logger.warn("Unable to save StoredTimes to DB. Elements count: " + localCache.size(), e);
             if (transaction != null) {
                 transaction.rollback();

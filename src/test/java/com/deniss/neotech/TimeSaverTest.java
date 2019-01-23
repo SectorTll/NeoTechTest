@@ -3,24 +3,26 @@ package com.deniss.neotech;
 import com.deniss.neotech.db.HibernateUtil;
 import com.deniss.neotech.db.StoredTime;
 import mockit.*;
-
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.engine.transaction.spi.LocalStatus;
 import org.powermock.api.mockito.PowerMockito;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.transaction.Synchronization;
-
-import java.lang.reflect.Method;
-
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyObject;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
+
+/**************************************************************************
+ *An important class need to be tested
+ * -
+ *
+ *************************************************************************/
 public class TimeSaverTest {
 
     @Tested
@@ -28,6 +30,10 @@ public class TimeSaverTest {
 
     @Injectable
     private Director director;
+
+
+    @Mocked
+    private Director director2;
 
     @Mocked
     private Session session;
@@ -38,13 +44,18 @@ public class TimeSaverTest {
     @Mocked
     Transaction transaction;
 
+    @Mocked
+    HibernateUtil hybernateUtil;
+
+
 
 
     @Test public void testCreate_notException() throws Exception {
         final TimeSaver[] t = new TimeSaver[1];
-        new Expectations() {
+        new Verifications() {
             {
                 t[0] = TimeSaver.create(director);
+                assertNotNull(t[0]);
             }
         };
 
@@ -53,12 +64,7 @@ public class TimeSaverTest {
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testCreate_Exception() throws Exception {
         final TimeSaver[] t = new TimeSaver[1];
-        new Expectations() {
-            {
-                t[0] = TimeSaver.create(null);
-                result = new Exception();
-            }
-        };
+        t[0] = TimeSaver.create(null);
 
     }
 
@@ -78,5 +84,38 @@ public class TimeSaverTest {
         boolean result = t.call();
         assertEquals(result,true);
     }
+
+
+
+    @Test public void testSaveSuccessNoException() throws Exception {
+
+        new Expectations() {
+            {
+                hybernateUtil.getSessionFactory().openSession();
+                result = session;
+            }
+        };
+
+            TimeSaver t =TimeSaver.create(director);
+            List<StoredTime> lst =new ArrayList<StoredTime>();
+            lst.add(new StoredTime());
+            lst.add(new StoredTime());
+            assertEquals(t.saveData(lst),true);
+    }
+
+    @Test public void testSaveFailNoException() throws Exception {
+
+        new Expectations() {
+            {
+                hybernateUtil.getSessionFactory().openSession();
+                result = session;
+            }
+        };
+
+        TimeSaver t =TimeSaver.create(director);
+
+        assertEquals(t.saveData(null),false);
+    }
+
 
 }
